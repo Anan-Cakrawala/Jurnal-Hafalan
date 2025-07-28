@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Jurnal Hafalan Siswa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        form input, form select {
+            padding: 8px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        form button {
+            padding: 10px;
+            background: #007BFF;
+            border: none;
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Jurnal Hafalan Siswa</h1>
+
+    <form id="hafalanForm">
+        <label>Tanggal:</label>
+        <input type="date" id="tanggal" required>
+
+        <label>Nama Siswa:</label>
+        <input type="text" id="nama" placeholder="Contoh: Ahmad Zaky" required>
+
+        <label>Surah / Ayat:</label>
+        <input type="text" id="surah" placeholder="Contoh: Al-Baqarah 1-5" required>
+
+        <label>Keterangan:</label>
+        <input type="text" id="keterangan" placeholder="Contoh: Lancar / Perlu Pengulangan" required>
+
+        <button type="submit">Tambah Hafalan</button>
+    </form>
+
+    <table id="jurnalTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Nama Siswa</th>
+                <th>Surah / Ayat</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan dimasukkan di sini oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Load data dari localStorage saat halaman dibuka
+        let hafalanList = JSON.parse(localStorage.getItem("hafalanData")) || [];
+
+        function renderTable() {
+            const tbody = document.querySelector("#jurnalTable tbody");
+            tbody.innerHTML = ""; // kosongkan isi tabel
+            hafalanList.forEach((item, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.tanggal}</td>
+                        <td>${item.nama}</td>
+                        <td>${item.surah}</td>
+                        <td>${item.keterangan}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Form submit
+        document.getElementById("hafalanForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const tanggal = document.getElementById("tanggal").value;
+            const nama = document.getElementById("nama").value;
+            const surah = document.getElementById("surah").value;
+            const keterangan = document.getElementById("keterangan").value;
+
+            // Tambahkan ke array dan simpan ke localStorage
+            hafalanList.push({ tanggal, nama, surah, keterangan });
+            localStorage.setItem("hafalanData", JSON.stringify(hafalanList));
+
+            // Bersihkan form
+            this.reset();
+
+            // Tampilkan ulang tabel
+            renderTable();
+        });
+
+        // Tampilkan data saat pertama kali dibuka
+        renderTable();
+    </script>
+
+</body>
+</html>
